@@ -113,21 +113,21 @@ let createNewUser = ((data) => {
             if(check === true) {
                 resolve({
                     errCode: 1,
-                    message: 'Your email is already in used, Plz another email'
+                    errMessage: 'Your email is already in used, Plz another email'
+                })
+            }else {
+                let hashPasswordFromBcript = await hashUserPassword(data.password);
+                await db.User.create({
+                    email: data.email,
+                    password: hashPasswordFromBcript,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                    phonenumber: data.phonenumber,
+                    gender: data.gender === '1' ? true : false,
+                    roleId: data.roleId,
                 })
             }
-
-            let hashPasswordFromBcript = await hashUserPassword(data.password);
-            await db.User.create({
-                email: data.email,
-                password: hashPasswordFromBcript,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                address: data.address,
-                phonenumber: data.phonenumber,
-                gender: data.gender === '1' ? true : false,
-                roleId: data.roleId,
-            })
 
             resolve({
                 errCode: 0,
@@ -166,6 +166,7 @@ let deleteUser = (userId) => {
 let updateUserData = (data) => {
     return new Promise( async (resolve, reject) => {
         try{
+            console.log('check nodejs ', data)
             if(!data.id) {
                 resolve({
                     errCode: 2,
@@ -205,11 +206,36 @@ let updateUserData = (data) => {
         }
     })
 }
+
+let getAllCodeService = (typeInput) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            if(!typeInput) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters !'
+                })
+            }
+            else {
+                let res = {};
+                let allcode = await db.Allcode.findAll({
+                    where: { type : typeInput }
+                });
+                res.errCode = 0;
+                res.data = allcode;
+                resolve(res);
+            }
+        }catch(e) {
+            reject(e)
+        }
+    })
+}
  
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     deleteUser: deleteUser,
-    updateUserData: updateUserData
+    updateUserData: updateUserData,
+    getAllCodeService: getAllCodeService,
 }

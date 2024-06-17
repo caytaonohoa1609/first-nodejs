@@ -22,7 +22,7 @@ let initWebRoutes = (app) => {
     router.put('/api/edit-user', userController.handleEditUser);
     router.delete('/api/delete-user', userController.handleDeleteUser); // rest API
 
-   
+    router.get('/allcode', userController.getAllCode)
     
     
 
