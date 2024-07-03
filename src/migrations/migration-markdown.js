@@ -20,9 +20,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT('long')
         },
-    discription: {
+    description: {
         allowNull: true,
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT('long')
         },
     doctorId: {
         allowNull: true,
